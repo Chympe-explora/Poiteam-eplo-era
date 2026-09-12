@@ -86,10 +86,10 @@
   window.KC_IMAGES = {
     // Rotating homepage background photos
     heroBg1: "hero-river-aerial.jpg",
-    heroBg2: "hero-bg-2.jpg",
+    heroBg2: "gallery-route.jpg",
 
-    heroSide: "hero-side.jpg",
-    trekCard: "trek-card.jpg",
+    heroSide: "hero-river-aerial.jpg",
+    trekCard: "gallery-trek.jpg",
     expeditionPackageCard: "expedition-package-card.jpg",
 
     // Guide photo and site logo (kept from the existing brand)
