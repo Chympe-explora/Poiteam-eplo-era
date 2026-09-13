@@ -560,13 +560,52 @@
         "text": "What We Offer:"
       },
       {
-        "type": "list",
-        "items": [
-          "🏞️ Krem Chympe Falls & Caves – Explore ancient limestone caves carved by water over millennia. Wade through underground streams. Stand beneath waterfalls that few outsiders have ever seen.",
-          "🌿 Wilderness Expedition – Real jungle survival. Not a theme park. Learn to read the forest, build shelter, identify plants, and navigate like the locals do.",
-          "🏡 Homestay Experience – Sleep in our homes. Eat our food. Hear our stories. Not in a hotel. Not in a resort. In the heart of our community.",
-          "🔥 Real Connection – No scripts. No rehearsed performances. Just us, sharing our world with you."
-        ]
+        "type": "heading",
+        "text": "🏞️ Krem Chympe Falls & Caves"
+      },
+      {
+        "type": "paragraph",
+        "text": "Explore ancient limestone caves carved by water over millennia. Wade through underground streams. Stand beneath waterfalls that few outsiders have ever seen."
+      },
+      {
+        "type": "image",
+        "key": "about_offer_1"
+      },
+      {
+        "type": "heading",
+        "text": "🌿 Wilderness Expedition"
+      },
+      {
+        "type": "paragraph",
+        "text": "Real jungle survival. Not a theme park. Learn to read the forest, build shelter, identify plants, and navigate like the locals do."
+      },
+      {
+        "type": "image",
+        "key": "about_offer_2"
+      },
+      {
+        "type": "heading",
+        "text": "🏡 Homestay Experience"
+      },
+      {
+        "type": "paragraph",
+        "text": "Sleep in our homes. Eat our food. Hear our stories. Not in a hotel. Not in a resort. In the heart of our community."
+      },
+      {
+        "type": "image",
+        "key": "about_offer_3"
+      },
+      {
+        "type": "heading",
+        "text": "🔥 Real Connection"
+      },
+      {
+        "type": "paragraph",
+        "text": "No scripts. No rehearsed performances. Just us, sharing our world with you."
+      },
+      {
+        "type": "image",
+        "key": "about_offer_4"
       },
       {
         "type": "image",
@@ -592,10 +631,6 @@
           "Sustainable – We're not here for a quick buck. We're here to build something that lasts. For our children. For yours. For this land that has given us everything.",
           "Local knowledge – You won't get a scripted tour. You'll get the real stories. The ones passed down through generations. The ones that don't exist in any guidebook."
         ]
-      },
-      {
-        "type": "image",
-        "key": "about_4"
       },
       {
         "type": "paragraph",
@@ -650,8 +685,11 @@
     "exp_food": { "enabled": false, "image": "", "alt": "Local food experience" },
     "about_1": { "enabled": true, "image": "Team Selfie River Jeep.jpg", "alt": "About Team Explo Era" },
     "about_2": { "enabled": true, "image": "Muddy Jeep Guide.jpg", "alt": "Local guides at work" },
+    "about_offer_1": { "enabled": true, "image": "Cave Mouth Waterfall View.jpg", "alt": "Krem Chympe Falls & Caves" },
+    "about_offer_2": { "enabled": true, "image": "Bamboo Jungle Trail.jpg", "alt": "Wilderness Expedition" },
+    "about_offer_3": { "enabled": true, "image": "Camping Deck View.jpg", "alt": "Homestay Experience" },
+    "about_offer_4": { "enabled": true, "image": "Rafting.jpg", "alt": "Real Connection" },
     "about_3": { "enabled": true, "image": "Team Waterfall Celebration.jpg", "alt": "What we offer" },
-    "about_4": { "enabled": true, "image": "Camp Under Rock Overhang.jpg", "alt": "Eco-friendly tourism" },
     "about_5": { "enabled": true, "image": "Waterfall Morning Light.jpg", "alt": "Welcome to Explo Era" },
     "booking_1": { "enabled": false, "image": "Cave Ecosystem 2.jpg", "alt": "Best price, no surprises" },
     "booking_2": { "enabled": false, "image": "Cave Lagoon.jpg", "alt": "Talk to our local team" },

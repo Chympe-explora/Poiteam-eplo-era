@@ -195,6 +195,8 @@
   function ImageSlot(props) {
     var slots = CONTENT.imageSlots || {};
     var slot = props.slotKey ? slots[props.slotKey] : props.slot;
+    var failedState = useState(false);
+    var failed = failedState[0], setFailed = failedState[1];
     if (!slot || slot.enabled === false) return null;
     var type = detectSlotType(slot);
     if (type === "video") {
@@ -205,10 +207,14 @@
       var imgs = (slot.images && slot.images.length ? slot.images : (slot.image ? [slot.image] : []));
       return h(MediaGallerySwipe, { images: imgs, alt: slot.alt, className: props.className });
     }
-    if (!slot.image) return null;
+    // A photo set via the Telegram admin bot can go stale (e.g. an
+    // uploaded link expiring). Rather than leave a broken-image icon
+    // on the page for visitors, a failed load just closes the slot —
+    // same clean look as a disabled slot has.
+    if (!slot.image || failed) return null;
     return h(
       "div", { className: props.className || "mt-1 rounded-xl overflow-hidden aspect-[16/9] bg-black/20" },
-      h("img", { src: slot.image, alt: slot.alt || "", className: "w-full h-full object-cover" })
+      h("img", { src: slot.image, alt: slot.alt || "", onError: function () { setFailed(true); }, className: "w-full h-full object-cover" })
     );
   }
 

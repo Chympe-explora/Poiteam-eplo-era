@@ -79,10 +79,46 @@
     return result;
   }
 
+  // Some arrays (e.g. whyVisit.journeys) aren't "blocks" — each item is
+  // its own card carrying an embedded "imageSlot" object. Same failure
+  // mode as above: an admin text edit to the title/description round-
+  // trips the whole journeys array, and if whatever saved it doesn't
+  // know about "imageSlot", the photo silently vanishes for everyone.
+  // Match items by "number" (or "key"/"id"/"title" as fallbacks) and
+  // restore any imageSlot the override version dropped.
+  function restoreMissingEmbeddedImages(baseArr, overrideArr) {
+    if (!baseArr.length || !overrideArr.length) return overrideArr;
+    if (!baseArr[0] || typeof baseArr[0] !== "object" || !baseArr[0].imageSlot) return overrideArr;
+    var idFields = ["number", "key", "id", "title"];
+    function idOf(item) {
+      for (var i = 0; i < idFields.length; i++) {
+        if (item && item[idFields[i]] != null) return idFields[i] + ":" + item[idFields[i]];
+      }
+      return null;
+    }
+    return overrideArr.map(function (overrideItem) {
+      var id = idOf(overrideItem);
+      if (!id) return overrideItem;
+      var baseItem = baseArr.filter(function (b) { return idOf(b) === id; })[0];
+      if (!baseItem || !baseItem.imageSlot || !baseItem.imageSlot.image) return overrideItem;
+      var hasImage = overrideItem.imageSlot && overrideItem.imageSlot.enabled !== false && overrideItem.imageSlot.image;
+      if (hasImage) return overrideItem;
+      var restored = {};
+      for (var k in overrideItem) restored[k] = overrideItem[k];
+      restored.imageSlot = baseItem.imageSlot;
+      return restored;
+    });
+  }
+
+  function protectArrayImages(baseArr, overrideArr) {
+    if (looksLikeBlockArray(baseArr)) return restoreMissingImageBlocks(baseArr, overrideArr);
+    return restoreMissingEmbeddedImages(baseArr, overrideArr);
+  }
+
   function deepMerge(base, override) {
     if (override === undefined || override === null) return base;
     if (Array.isArray(override)) {
-      return Array.isArray(base) ? restoreMissingImageBlocks(base, override) : override;
+      return Array.isArray(base) ? protectArrayImages(base, override) : override;
     }
     if (typeof override !== "object") return override;
     if (typeof base !== "object" || base === null || Array.isArray(base)) base = {};
