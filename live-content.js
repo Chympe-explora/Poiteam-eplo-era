@@ -62,34 +62,60 @@
     var missing = baseImages.filter(function (b) { return !overrideKeys[b.key]; });
     if (!missing.length) return overrideArr;
     var result = overrideArr.slice();
+    // Multiple missing images can share the same text anchor (two photos
+    // back-to-back in base) — track the last insertion point per anchor
+    // so a second photo lands right after the first, not back at the
+    // anchor position (which would reverse their order).
+    var lastInsertAt = {};
     missing.forEach(function (imgBlock) {
       var idxInBase = baseArr.indexOf(imgBlock);
-      var precedingBase = idxInBase > 0 ? baseArr[idxInBase - 1] : null;
-      var insertAt = result.length;
-      if (precedingBase) {
+      // Walk back past any other image blocks — an image can't be
+      // text-matched against override, so the real anchor is the
+      // nearest preceding block that actually carries text.
+      var anchorIdx = idxInBase - 1;
+      while (anchorIdx >= 0 && baseArr[anchorIdx].type === "image") anchorIdx--;
+      var anchor = anchorIdx >= 0 ? baseArr[anchorIdx] : null;
+      var anchorKey = anchor ? (anchor.type + "::" + anchor.text) : "__start__";
+      var insertAt;
+      if (Object.prototype.hasOwnProperty.call(lastInsertAt, anchorKey)) {
+        insertAt = lastInsertAt[anchorKey] + 1;
+      } else if (anchor) {
+        insertAt = result.length;
         for (var i = 0; i < result.length; i++) {
-          if (result[i].type === precedingBase.type && result[i].text === precedingBase.text) {
+          if (result[i].type === anchor.type && result[i].text === anchor.text) {
             insertAt = i + 1;
             break;
           }
         }
+      } else {
+        insertAt = 0;
       }
       result.splice(insertAt, 0, imgBlock);
+      lastInsertAt[anchorKey] = insertAt;
+      for (var k in lastInsertAt) {
+        if (k !== anchorKey && lastInsertAt[k] >= insertAt) lastInsertAt[k] += 1;
+      }
     });
     return result;
   }
 
   // Some arrays (e.g. whyVisit.journeys) aren't "blocks" — each item is
-  // its own card carrying an embedded "imageSlot" object. Same failure
-  // mode as above: an admin text edit to the title/description round-
-  // trips the whole journeys array, and if whatever saved it doesn't
-  // know about "imageSlot", the photo silently vanishes for everyone.
-  // Match items by "number" (or "key"/"id"/"title" as fallbacks) and
-  // restore any imageSlot the override version dropped.
+  // its own card carrying its photo directly — either as an "imageSlot"
+  // object (whyVisit.journeys) or as an "images" array (destinationDetails
+  // .highlights, waterfalls.locations, etc). Same failure mode as above:
+  // an admin text edit to the title/description round-trips the whole
+  // array, and if whatever saved it doesn't preserve that photo field,
+  // it silently vanishes for everyone. Match items by "label" (or
+  // "number"/"key"/"id"/"title" as fallbacks) and restore whichever
+  // photo field the override version dropped.
   function restoreMissingEmbeddedImages(baseArr, overrideArr) {
     if (!baseArr.length || !overrideArr.length) return overrideArr;
-    if (!baseArr[0] || typeof baseArr[0] !== "object" || !baseArr[0].imageSlot) return overrideArr;
-    var idFields = ["number", "key", "id", "title"];
+    var sample = baseArr[0];
+    if (!sample || typeof sample !== "object") return overrideArr;
+    var hasImageSlot = !!sample.imageSlot;
+    var hasImagesArr = Array.isArray(sample.images);
+    if (!hasImageSlot && !hasImagesArr) return overrideArr;
+    var idFields = ["number", "key", "id", "label", "title"];
     function idOf(item) {
       for (var i = 0; i < idFields.length; i++) {
         if (item && item[idFields[i]] != null) return idFields[i] + ":" + item[idFields[i]];
@@ -100,14 +126,31 @@
       var id = idOf(overrideItem);
       if (!id) return overrideItem;
       var baseItem = baseArr.filter(function (b) { return idOf(b) === id; })[0];
-      if (!baseItem || !baseItem.imageSlot || !baseItem.imageSlot.image) return overrideItem;
-      var hasImage = overrideItem.imageSlot && overrideItem.imageSlot.enabled !== false && overrideItem.imageSlot.image;
-      if (hasImage) return overrideItem;
-      var restored = {};
-      for (var k in overrideItem) restored[k] = overrideItem[k];
-      restored.imageSlot = baseItem.imageSlot;
-      return restored;
+      if (!baseItem) return overrideItem;
+      var restored = null;
+      if (hasImageSlot && baseItem.imageSlot && baseItem.imageSlot.image) {
+        var hasImage = overrideItem.imageSlot && overrideItem.imageSlot.enabled !== false && overrideItem.imageSlot.image;
+        if (!hasImage) {
+          restored = restored || copy(overrideItem);
+          restored.imageSlot = baseItem.imageSlot;
+        }
+      }
+      if (hasImagesArr && Array.isArray(baseItem.images) && baseItem.images.filter(Boolean).length) {
+        var overrideHasImages = Array.isArray(overrideItem.images) && overrideItem.images.filter(Boolean).length
+          && overrideItem.imagesEnabled !== false;
+        if (!overrideHasImages) {
+          restored = restored || copy(overrideItem);
+          restored.images = baseItem.images;
+          if (restored.imagesEnabled === false) restored.imagesEnabled = baseItem.imagesEnabled !== false;
+        }
+      }
+      return restored || overrideItem;
     });
+    function copy(item) {
+      var out = {};
+      for (var k in item) out[k] = item[k];
+      return out;
+    }
   }
 
   function protectArrayImages(baseArr, overrideArr) {
