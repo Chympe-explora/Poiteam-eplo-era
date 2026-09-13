@@ -518,26 +518,34 @@
     var idxState = useState(0);
     var idx = idxState[0], setIdx = idxState[1];
     var dragState = useRef({ startX: 0, dx: 0, dragging: false });
+    // A photo URL that comes from the Telegram-admin backend (rather
+    // than a static file bundled with the site) can go stale — e.g. an
+    // uploaded photo's link expiring. Rather than show visitors a
+    // broken-image icon forever, any src that fails to load gets
+    // quietly dropped from the rotation.
+    var failedState = useState({});
+    var failed = failedState[0], setFailed = failedState[1];
+    var visible = images.filter(function (src) { return !failed[src]; });
 
     useEffect(function () {
-      if (images.length < 2) return undefined;
+      if (visible.length < 2) return undefined;
       var timer = setInterval(function () {
-        setIdx(function (i) { return (i + 1) % images.length; });
+        setIdx(function (i) { return (i + 1) % visible.length; });
       }, props.intervalMs || 5500);
       return function () { clearInterval(timer); };
-    }, [images.length]);
+    }, [visible.length]);
 
-    if (images.length === 0) return null;
+    if (visible.length === 0) return null;
 
-    var safeIdx = idx % images.length;
+    var safeIdx = idx % visible.length;
 
     function onTouchStart(e) { dragState.current = { startX: e.touches[0].clientX, dx: 0, dragging: true }; }
     function onTouchMove(e) { if (dragState.current.dragging) dragState.current.dx = e.touches[0].clientX - dragState.current.startX; }
     function onTouchEnd() {
       var dx = dragState.current.dx;
       dragState.current.dragging = false;
-      if (dx > 40) setIdx(function (i) { return (i - 1 + images.length) % images.length; });
-      else if (dx < -40) setIdx(function (i) { return (i + 1) % images.length; });
+      if (dx > 40) setIdx(function (i) { return (i - 1 + visible.length) % visible.length; });
+      else if (dx < -40) setIdx(function (i) { return (i + 1) % visible.length; });
     }
 
     return h(
@@ -545,19 +553,20 @@
         className: "relative mt-4 rounded-xl overflow-hidden aspect-[16/9] bg-black/20",
         onTouchStart: onTouchStart, onTouchMove: onTouchMove, onTouchEnd: onTouchEnd
       },
-      images.map(function (src, i) {
+      visible.map(function (src, i) {
         return h("img", {
-          key: i,
+          key: src,
           src: src,
+          onError: function () { setFailed(function (f) { var n = {}; for (var k in f) n[k] = f[k]; n[src] = true; return n; }); },
           className: "absolute inset-0 w-full h-full object-cover transition-opacity duration-[1400ms] ease-in-out " + (i === safeIdx ? "opacity-100" : "opacity-0")
         });
       }),
-      images.length > 1 && h(
+      visible.length > 1 && h(
         "div", { className: "hidden md:flex absolute inset-0 items-center justify-between px-2" },
         h(
           "button",
           {
-            onClick: function () { setIdx(function (i) { return (i - 1 + images.length) % images.length; }); },
+            onClick: function () { setIdx(function (i) { return (i - 1 + visible.length) % visible.length; }); },
             className: "w-7 h-7 rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center text-white",
             "aria-label": "Previous photo"
           },
@@ -566,16 +575,16 @@
         h(
           "button",
           {
-            onClick: function () { setIdx(function (i) { return (i + 1) % images.length; }); },
+            onClick: function () { setIdx(function (i) { return (i + 1) % visible.length; }); },
             className: "w-7 h-7 rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center text-white",
             "aria-label": "Next photo"
           },
           h(ArrowRight, { size: 14 })
         )
       ),
-      images.length > 1 && h(
+      visible.length > 1 && h(
         "div", { className: "absolute bottom-1.5 inset-x-0 flex justify-center gap-1.5" },
-        images.map(function (_, i) {
+        visible.map(function (_, i) {
           return h("span", { key: i, className: "w-1.5 h-1.5 rounded-full " + (i === safeIdx ? "bg-white" : "bg-white/40") });
         })
       )
@@ -595,6 +604,8 @@
 
   function ImageSlot(props) {
     var slot = props.slot;
+    var failedState = useState(false);
+    var failed = failedState[0], setFailed = failedState[1];
     if (!slot || slot.enabled === false) return null;
     var type = detectSlotType(slot);
     if (type === "video") {
@@ -606,10 +617,14 @@
       if (!imgs.length) return null;
       return h(ImageSlider, { images: imgs });
     }
-    if (!slot.image) return null;
+    // A photo set via the Telegram admin bot can go stale (e.g. an
+    // uploaded link expiring). Rather than leave a broken-image icon
+    // on the page for visitors, a failed load just closes the slot —
+    // same clean look as a disabled slot has.
+    if (!slot.image || failed) return null;
     return h(
       "div", { className: props.className || "mt-4 rounded-xl overflow-hidden aspect-[16/9] bg-black/20" },
-      h("img", { src: slot.image, alt: slot.alt || "", className: "w-full h-full object-cover" })
+      h("img", { src: slot.image, alt: slot.alt || "", onError: function () { setFailed(true); }, className: "w-full h-full object-cover" })
     );
   }
 
