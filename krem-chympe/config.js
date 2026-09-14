@@ -239,7 +239,7 @@
       },
 
       // ---- Contact & payment details ----
-      instagram: "https://www.instagram.com/unexplored_meghalaya?igsh=ZHZpODB3aXl0bXBu",
+      instagram: "https://www.instagram.com/team_explo_era?stkn=MWxwcXIzZDh1ajJoMw==",
       whatsappNumber: "916001877518",
       upiId: "8787679579@ybl",
       bank: {
