@@ -684,7 +684,7 @@
     "about_offer_1": { "enabled": true, "image": "Team Waterfall Celebration.jpg", "alt": "Krem Chympe Falls & Caves" },
     "about_offer_2": { "enabled": true, "image": "Bamboo Jungle Trail.jpg", "alt": "Wilderness Expedition" },
     "about_offer_3": { "enabled": true, "image": "Camping Deck View.jpg", "alt": "Homestay Experience" },
-    "about_3": { "enabled": true, "image": "Team Waterfall Celebration.jpg", "alt": "What we offer" },
+    "about_3": { "enabled": true, "image": "Happy waterfall.jpg", "alt": "Real connection with our team" },
     "about_5": { "enabled": true, "image": "Waterfall Morning Light.jpg", "alt": "Welcome to Explo Era" },
     "booking_1": { "enabled": false, "image": "Cave Ecosystem 2.jpg", "alt": "Best price, no surprises" },
     "booking_2": { "enabled": false, "image": "Cave Lagoon.jpg", "alt": "Talk to our local team" },
