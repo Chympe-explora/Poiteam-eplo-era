@@ -1616,6 +1616,26 @@
       return "https://wa.me/" + waNumber(CONTENT.whatsappNumber) + "?text=" + encodeURIComponent(msg);
     }
 
+    // Used only when bookingStatus === "cancelled" — i.e. every guide this
+    // booking was sent to has declined it (see the "all eligible guides
+    // declined" fallthrough in handleBookingCallback, booking.js). Same
+    // shape as noResponseWhatsappLink above: leads with the exact backend
+    // bookingId (trackingId) as a "Booking Code" so the admin can paste it
+    // straight back into the Telegram bot (handleBookingCodeLookup,
+    // telegram-bot.js) and get the full details, the receipt, and working
+    // Confirm/Reject buttons to settle it by hand.
+    function rejectedWhatsappLink() {
+      var msg =
+        "🏔️ Booking Follow-up — " + (CONTENT.siteName || "Adventure Booking") + "\n\n" +
+        "Hi! My guide wasn't able to confirm my booking. Could you please help me sort this out?\n\n" +
+        "🔑 Booking Code: " + (trackingId || "—") + "\n" +
+        "👤 Name: " + contact.name + "\n" +
+        "📅 Visit: " + formatDate(contact.date) + "\n" +
+        "🎒 Package: " + packageLabel + "\n\n" +
+        "Thank you!";
+      return "https://wa.me/" + waNumber(CONTENT.whatsappNumber) + "?text=" + encodeURIComponent(msg);
+    }
+
     // ---- Nav items shared by the header and the hero's own dropdown ----
     // Each item can be admin-configured (via the Telegram bot) as either
     // a plain string (old format — always routes non-Home items to the
@@ -2560,19 +2580,24 @@
       bookingStatus === "confirmed" && guideContact.name && h(
         "p", { className: "mt-1 text-white/40 text-[11px]" }, t("confirmedByPrefix", "Confirmed by "), guideContact.name
       ),
+      bookingStatus === "cancelled" && trackingId && h(
+        "div", { className: "mt-4 inline-block px-4 py-2 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-200 text-sm font-mono" },
+        t("bookingCodeLabel", "Booking Code: "), trackingId
+      ),
       bookingStatus === "cancelled" && h(
-        "p", { className: "mt-4 text-[12px] text-amber-300" }, t("cancelledHintText", "Chat with us to sort this out.")
+        "p", { className: "mt-4 text-[12px] text-amber-300" }, t("cancelledHintText", "Tap below to chat with our admin directly on WhatsApp — give them the code above and we'll sort it out right away.")
       ),
       h(
         "div", { className: "mt-6 flex flex-col gap-3" },
         h(
           "a", {
-            href: whatsappLink(),
+            href: bookingStatus === "cancelled" ? rejectedWhatsappLink() : whatsappLink(),
             target: "_blank",
+            rel: "noopener",
             className: "kc-whatsapp-btn" + (bookingStatus === "cancelled" ? " ring-2 ring-amber-400/60" : "")
           },
           h(Phone, { size: 18 }),
-          bookingStatus === "confirmed" ? t("messageYourGuideLabel", "Message Your Guide") : t("whatsappLabel", "WhatsApp")
+          bookingStatus === "confirmed" ? t("messageYourGuideLabel", "Message Your Guide") : bookingStatus === "cancelled" ? t("chatWithAdminLabel", "Chat With Admin on WhatsApp") : t("whatsappLabel", "WhatsApp")
         )
       ),
         // Refund request — only offered once the guide has actually
