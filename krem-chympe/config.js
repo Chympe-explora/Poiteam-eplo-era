@@ -393,7 +393,7 @@
         intro: "Deep in the wild landscapes of Meghalaya, Krem Chympe isn't another tourist spot on a checklist. It's where adventure lives. Where nature shows off. Where you leave the ordinary world behind and step into something raw, real, and unforgettable. From the moment you leave the road, everything changes. The 4×4 rattles through rugged terrain that GPS doesn't even recognize. The trek pulls you into ancient forests where sunlight filters through leaves like gold dust. Waterfalls appear like secrets, hidden until you're standing right in front of them. And then — the cave.",
         journeys: [
           {
-            emoji: "🛻",
+            emoji: "|",
             number: "01",
             title: "The Journey",
             tagline: "The road becomes part of the story.",
@@ -402,7 +402,7 @@
             imageSlot: { enabled: true, image: window.KC_IMAGES.whyJourney, alt: "The Journey — 4x4 off-roading" }
           },
           {
-            emoji: "🌿",
+            emoji: "|",
             number: "02",
             title: "The Trek",
             tagline: "Walk through forests that feel prehistoric.",
@@ -411,7 +411,7 @@
             imageSlot: { enabled: true, image: window.KC_IMAGES.whyTrek, alt: "The Trek — forest trail" }
           },
           {
-            emoji: "🕳️",
+            emoji: "|",
             number: "03",
             title: "The Cave",
             tagline: "Not a walk-through. A journey.",
@@ -420,7 +420,7 @@
             imageSlot: { enabled: true, image: window.KC_IMAGES.whyCave, alt: "The Cave — bamboo rafting" }
           },
           {
-            emoji: "🌊",
+            emoji: "|",
             number: "04",
             title: "The Thrill",
             tagline: "Live the adventure.",
@@ -799,11 +799,11 @@
 
       // ---- Site footer (shown at the very bottom of the home page) ----
       footer: {
-        brandName: "TEAM CHYMPE EXPLORA",
-        locationLine: "Brishyrnot, Hno: 34, Near Football Ground, Po: Lumshonong, East Jaintia Hills, Meghalaya, 793000, India",
+        brandName: "TEAM EXPLO ERA",
+        locationLine: "Brishyrnot, Hno: 34, Near Football Ground, Po: Lumshonong, East Jaintia Hills, Meghalaya, 793200, India",
         contactTitle: "Contact Us",
         phone: "+91 8787679579",
-        email: "chympeexplora@gmail.com",
+        email: "teamexploera@gmail.com",
         followTitle: "Follow Us On",
         importantLinkTitle: "Important Link",
         refundPolicyLabel: "Refund Policy",
@@ -886,7 +886,7 @@
             number: "6",
             heading: "How to Request a Cancellation",
             blocks: [
-              { type: "text", text: "To cancel your booking, contact Krem Chympe using the contact details provided on the website or your booking confirmation." },
+              { type: "text", text: "To cancel your booking, contact Team Explo Era using the contact details provided on the website or your booking confirmation." },
               { type: "list", lead: "Please provide:", items: [
                 "Booking name",
                 "Booking/reference number",
