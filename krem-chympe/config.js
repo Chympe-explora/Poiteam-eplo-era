@@ -241,12 +241,12 @@
       // ---- Contact & payment details ----
       instagram: "https://www.instagram.com/unexplored_meghalaya?igsh=ZHZpODB3aXl0bXBu",
       whatsappNumber: "916001877518",
-      upiId: "kremchympe@upi",
+      upiId: "8787679579@ybl",
       bank: {
-        name: "Krem Chympe Adventure",
-        account: "123456789012",
-        ifsc: "SBIN0001234",
-        bankName: "SBI, Cherrapunji Branch"
+        name: "senly suchiang",
+        account: "87012129243",
+        ifsc: "SBINORRMEGB",
+        bankName: "Meghalaya Rural Bank, Lumshnong Branch"
       },
 
       // ---- Prices (in ₹) ----
