@@ -258,7 +258,7 @@
       },
       {
         "type": "heading",
-        "text": "🌑 The Cave Experience"
+        "text": "| The Cave Experience"
       },
       {
         "type": "subheading",
@@ -561,7 +561,7 @@
       },
       {
         "type": "heading",
-        "text": "🏞️ Krem Chympe Falls & Caves"
+        "text": "| Krem Chympe Falls & Caves"
       },
       {
         "type": "paragraph",
