@@ -769,21 +769,12 @@
 
     // ---- Notice popup: shows once per visitor, closable, admin-resettable ----
     var NOTICE = CONTENT.notice || {};
-    var noticeState = useState(function () {
-      if (typeof localStorage === "undefined") return true;
-      var closedVersion = localStorage.getItem("era_notice_closed_" + (window.KC_SITE_ID || "site"));
-      // If the admin bumps notice.showAgain, a stale closedVersion no
-      // longer matches, so the notice shows again for everyone.
-      return closedVersion !== String(NOTICE.showAgain || "");
-    });
-    var showNotice = noticeState[0], setShowNotice = noticeState[1];
+    var noticeState = useState(true);
+var showNotice = noticeState[0], setShowNotice = noticeState[1];
 
-    function closeNotice() {
-      setShowNotice(false);
-      if (typeof localStorage !== "undefined") {
-        localStorage.setItem("era_notice_closed_" + (window.KC_SITE_ID || "site"), String(NOTICE.showAgain || ""));
-      }
-    }
+function closeNotice() {
+  setShowNotice(false);
+}
 
     function goToRefundPolicy() {
       setMobileMenuOpen(false);
