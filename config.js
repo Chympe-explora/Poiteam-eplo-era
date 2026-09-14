@@ -676,7 +676,7 @@
     "exp_jungle": { "enabled": true, "image": "Bamboo Jungle Trail.jpg", "alt": "Jungle trekking trail" },
     "exp_homestay": { "enabled": false, "image": "", "alt": "Homestay / camping deck" },
     "exp_survival": { "enabled": true, "image": "Survival Water Source.jpg", "alt": "Wilderness survival terrain" },
-    "exp_water": { "enabled": true, "image": "Waterfall Wide View.jpg", "alt": "Boat rafting" },
+    "exp_water": { "enabled": true, "image": "newimage.jpg", "alt": "Boat rafting" },
     "exp_night": { "enabled": true, "image": "overnight.jpg", "alt": "Night by the water" },
     "exp_food": { "enabled": false, "image": "", "alt": "Local food experience" },
     "about_1": { "enabled": true, "image": "Team Selfie River Jeep.jpg", "alt": "About Team Explo Era" },
