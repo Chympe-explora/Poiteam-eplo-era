@@ -685,7 +685,7 @@
     "about_offer_2": { "enabled": true, "image": "Bamboo Jungle Trail.jpg", "alt": "Wilderness Expedition" },
     "about_offer_3": { "enabled": true, "image": "Camping Deck View.jpg", "alt": "Homestay Experience" },
     "about_3": { "enabled": true, "image": "Team Waterfall Celebration.jpg", "alt": "Real connection with our team" },
-    "about_5": { "enabled": true, "image": "Waterfall Morning Light.jpg", "alt": "Welcome to Explo Era" },
+    "about_5": { "enabled": true, "image": "explo.jpg", "alt": "Welcome to Explo Era" },
     "booking_1": { "enabled": false, "image": "Cave Ecosystem 2.jpg", "alt": "Best price, no surprises" },
     "booking_2": { "enabled": false, "image": "Cave Lagoon.jpg", "alt": "Talk to our local team" },
     "booking_3": { "enabled": false, "image": "Cave entrance.jpg", "alt": "Small groups, exclusive access" },
