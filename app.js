@@ -567,7 +567,9 @@
             setForm({ name: "", rating: 0, comment: "" });
             loadRatings();
           } else {
-            setError("Something went wrong — please try again.");
+            setError((data && data.error === "too many requests")
+    ? "You're submitting too fast — please wait a minute and try again."
+    : "Something went wrong — please try again.");
           }
         })
         .catch(function () { setError("Something went wrong — please try again."); })
