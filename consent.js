@@ -79,7 +79,7 @@ window.KCConsent = (function () {
     banner.innerHTML =
       "<p>\uD83D\uDD12 <strong>Before you continue:</strong> to plan your trip and confirm a booking, we " +
       "collect what you type into this form (name, WhatsApp number, chosen package and dates), any " +
-      "payment receipt image you upload, and basic visit info (page viewed, referring site). This is " +
+      "payment receipt image you upload, and basic visit info. This is " +
       "sent to our team to arrange your booking and payment \u2014 it isn't sold or shared " +
       "with anyone else. You can decline and still browse, or book directly over WhatsApp instead.</p>" +
       '<div class="kc-btns">' +
