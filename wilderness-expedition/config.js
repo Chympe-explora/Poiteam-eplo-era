@@ -642,11 +642,11 @@
     ],
 
     footer: {
-      brandName: "TEAM CHYMPE EXPLORA",
+      brandName: "TEAM EXPLO ERA",
       locationLine: "Brishyrnot, Hno: 34, Near Football Ground, Po: Lumshonong, East Jaintia Hills, Meghalaya, 793000, India",
       contactTitle: "Contact Us",
       phone: "+91 8787679579",
-      email: "chympeexplora@gmail.com",
+      email: "teamexploera@gmail.com",
       followTitle: "Follow Us On",
       importantLinkTitle: "Important Link",
       refundPolicyLabel: "Refund Policy",
