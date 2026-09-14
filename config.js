@@ -179,7 +179,7 @@
     "quote": "Symphony in the mist.",
     "videoUrl": "hero-video.mp4",
     "videoEnabled": true,
-    "fallbackImage": "Trek Trail Mist.jpg",
+    "fallbackVideo": "hero-video.mp4",
     "enabled": true,
     "discoverLabel": "Discover",
     "discoverTargetId": "destinations",
