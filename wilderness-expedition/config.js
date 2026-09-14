@@ -294,7 +294,7 @@
       subtitle: "Four waterfalls, each reached only after real distance on foot",
       locations: [
         {
-          emoji: "🦋",
+          emoji: "|",
           title: "Butterfly Falls",
           subtitle: "The hidden waterfall, found while gathering firewood",
           story: "Butterfly Falls is a hidden waterfall discovered during an earlier exploration of the area. According to the explorer's account, the waterfall was not noticed during the main exploration — it was found later, while the explorer was searching the surrounding area for firewood after planning to camp nearby. The large number of butterflies around the waterfall inspired its name.",
@@ -305,7 +305,7 @@
           mapLink: ""
         },
         {
-          emoji: "🌫️",
+          emoji: "|",
           title: "Langam Falls",
           subtitle: "Named for a first impression, not a story",
           story: "Langam Falls was named by hunters based on their first impression of the place. The surrounding environment created an unsettling yet fascinating feeling — a combination of isolation, unfamiliarity and disorientation. The name reflects that first impression of the waterfall and its surroundings.",
@@ -314,7 +314,7 @@
           mapLink: ""
         },
         {
-          emoji: "🌊",
+          emoji: "|",
           title: "Linching Falls",
           subtitle: "No photograph. Only the destination.",
           story: "Linching Falls is a remote waterfall known through the knowledge of hunters who travel through the surrounding wilderness. It is one of the major destinations of the expedition. The name \u2014 given by hunters \u2014 is the only name this waterfall is known by.",
@@ -323,7 +323,7 @@
           mapLink: ""
         },
         {
-          emoji: "❓",
+          emoji: "|",
           title: "The Unnamed Waterfall",
           subtitle: "3 km beyond Linching Falls",
           story: "Beyond Linching Falls, approximately 3 km ahead, lies another waterfall that currently has no established name. There is no official photograph of this waterfall \u2014 it remains the expedition's final discovery point.",
