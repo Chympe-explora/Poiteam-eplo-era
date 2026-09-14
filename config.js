@@ -695,10 +695,10 @@
 
   "footer": {
     "brandName": "Team explo era",
-    "locationLine": "Brishyrnot, Hno: 34, Near Football Ground, Po: Lumshonong, East Jaintia Hills, Meghalaya, 793000, India",
+    "locationLine": "Brishyrnot, Hno: 34, Near Football Ground, Po: Lumshonong, East Jaintia Hills, Meghalaya, 793200, India",
     "contactTitle": "Contact Us",
     "phone": "+91 8787679579",
-    "email": "chympeexplora@gmail.com",
+    "email": "teamexploera@gmail.com",
     "followTitle": "Follow Us On",
     "importantLinkTitle": "Important Link",
     "refundPolicyLabel": "Refund Policy",
@@ -710,7 +710,7 @@
     "sections": [
       {
         "number": "1",
-        "heading": "Cancellation by Team Chympe Explora",
+        "heading": "Cancellation by Team Explo Era",
         "blocks": [
           {
             "type": "text",
