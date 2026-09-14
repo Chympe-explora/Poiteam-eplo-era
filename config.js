@@ -682,7 +682,7 @@
     "about_1": { "enabled": true, "image": "Team Selfie River Jeep.jpg", "alt": "About Team Explo Era" },
     "about_2": { "enabled": true, "image": "Muddy Jeep Guide.jpg", "alt": "Local guides at work" },
     "about_offer_1": { "enabled": true, "image": "Team Waterfall Celebration.jpg", "alt": "Krem Chympe Falls & Caves" },
-    "about_offer_2": { "enabled": true, "image": "Backpack River Overlook.jpg", "alt": "Wilderness Expedition" },
+    "about_offer_2": { "enabled": true, "image": "Bamboo Jungle Trail.jpg", "alt": "Wilderness Expedition" },
     "about_offer_3": { "enabled": true, "image": "Camping Deck View.jpg", "alt": "Homestay Experience" },
     "about_3": { "enabled": true, "image": "Team Waterfall Celebration.jpg", "alt": "What we offer" },
     "about_5": { "enabled": true, "image": "Waterfall Morning Light.jpg", "alt": "Welcome to Explo Era" },
