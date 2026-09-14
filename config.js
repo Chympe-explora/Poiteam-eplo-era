@@ -69,7 +69,7 @@
   "whatsappNumber": "916001877518",
   "logoImage": "logo.png",
   "backgroundvideo": "hero-video.mp4",
-  "instagram": "https://www.instagram.com/team_explo_era?stkn=MWxwcXIzZDh1ajJoMw==",
+  "instagram": "https://www.instagram.com/team_explo_era?stkn=ZHZpODB3aXl0bXBu",
 
   // ==========================================================
   // 🎬 SITE-WIDE BACKGROUND VIDEO
