@@ -68,7 +68,7 @@
   "siteSub": "ADVENTURE ERA AWAITS",
   "whatsappNumber": "916001877518",
   "logoImage": "logo.png",
-  "backgroundImage": "Blue watefall.jpg",
+  "backgroundvideo": "hero-video.mp4",
   "instagram": "https://www.instagram.com/unexplored_meghalaya?igsh=ZHZpODB3aXl0bXBu",
 
   // ==========================================================
@@ -85,7 +85,7 @@
       "videoUrl": "hero-video.mp4",
       "videoEnabled": true,
       "videoOpacity": 100,
-      "fallbackImage": "Trek Trail Mist.jpg",
+      "fallbackVideo": "hero-video.mp4",
       "overlay": {
         "enabled": true,
         "color": "#000000",
