@@ -239,7 +239,7 @@
       },
 
       // ---- Contact & payment details ----
-      instagram: "https://www.instagram.com/team_explo_era?stkn=MWxwcXIzZDh1ajJoMw==",
+      instagram: "https://www.instagram.com/team_explo_era?stkn=ZHZpODB3aXl0bXBu",
       whatsappNumber: "916001877518",
       upiId: "8787679579@ybl",
       bank: {
