@@ -35,26 +35,26 @@
       }
     });
   </script>
-  <script src="config.js"></script>
+  <script src="config.js" defer></script>
   <script>window.KC_SITE_ID = "root";</script>
   <!-- Pulls in anything changed from the Telegram admin bot (text,
        photos, prices, discounts, highlights) and merges it over the
        config.js defaults above, before the page renders. See
        live-content.js — safe to remove and the site still works from
        config.js alone. -->
-  <script src="live-content.js"></script>
+  <script src="live-content.js" defer></script>
 
   <!-- Site-wide fixed background video, mounted once outside the React
        app so it never restarts on scroll or page navigation. Reads
        window.KC_CONTENT.background (see config.js) — safe to remove,
        the site still renders fine without it. -->
-  <script src="background-system.js"></script>
+  <script src="background-system.js" defer></script>
 
   <!-- Per-page/per-section font size & color overrides, set from
        Telegram Admin (🔤 Fonts & Colors). Reads
        window.KC_CONTENT.sectionStyles[key].typography — safe to
        remove, the site still renders fine with its normal styling. -->
-  <script src="typography-system.js"></script>
+  <script src="typography-system.js" defer></script>
 
   <!-- Tailwind CSS (JIT engine loaded live from the CDN) — generates every
        utility class app.js uses, on the fly, so no class is ever missing
@@ -70,12 +70,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
   <!-- ERA AI: floating chat assistant bubble. Managed from the Telegram
        admin bot's "🤖 ERA AI" menu, including the Stop Learning toggle. -->
-  <script src="era-ai-widget.js"></script>
+  <script src="era-ai-widget.js" defer></script>
   <!-- Main app -->
-  <script src="app.js"></script>
+  <script src="app.js" defer></script>
   <!-- Makes external links open safely in a new tab -->
-  <script src="safelinks.js"></script>
+  <script src="safelinks.js" defer></script>
   <!-- Content Editor: pencil-icon tap-to-edit tool for text/images/highlights -->
-  <script src="editor.js"></script>
+  <script src="editor.js" defer></script>
 </body>
 </html>

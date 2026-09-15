@@ -126,7 +126,7 @@
     if (images.length === 1) {
       return h(
         "div", { className: className },
-        h("img", { src: images[0], alt: props.alt || "", className: "w-full h-full object-cover" })
+        h("img", { src: images[0], alt: props.alt || "", loading: "lazy", decoding: "async", className: "w-full h-full object-cover" })
       );
     }
 
@@ -158,7 +158,7 @@
         "div",
         { className: "absolute inset-0 flex h-full w-full transition-transform duration-500 ease-out", style: { transform: "translateX(-" + safeIdx * 100 + "%)" } },
         images.map(function (src, i) {
-          return h("img", { key: i, src: src, className: "w-full h-full object-cover flex-shrink-0", style: { minWidth: "100%" } });
+          return h("img", { key: i, src: src, loading: i === 0 ? undefined : "lazy", decoding: "async", className: "w-full h-full object-cover flex-shrink-0", style: { minWidth: "100%" } });
         })
       ),
       h(
@@ -214,7 +214,7 @@
     if (!slot.image || failed) return null;
     return h(
       "div", { className: props.className || "mt-1 rounded-xl overflow-hidden aspect-[16/9] bg-black/20" },
-      h("img", { src: slot.image, alt: slot.alt || "", onError: function () { setFailed(true); }, className: "w-full h-full object-cover" })
+      h("img", { src: slot.image, alt: slot.alt || "", loading: "lazy", decoding: "async", onError: function () { setFailed(true); }, className: "w-full h-full object-cover" })
     );
   }
 
@@ -480,6 +480,8 @@
           h("img", {
             src: props.logo || "logo.png",
             alt: "Logo",
+            loading: "lazy",
+            decoding: "async",
             className: "h-12 md:h-14 object-contain mx-auto mb-5",
             onError: function (e) { e.target.style.display = "none"; }
           }),
@@ -931,7 +933,7 @@ function closeNotice() {
         GlassCard, { className: "px-6 py-4 flex flex-wrap items-center justify-between gap-4" },
         h(
           "div", { className: "flex items-center gap-3" },
-          h("div", { className: "flex -space-x-2" }, [0, 1, 2, 3].map(function (p) { return h("img", { key: p, src: "https://i.pravatar.cc/100?img=" + (10 + p), className: "w-8 h-8 rounded-full border-2 border-black/30" }); })),
+          h("div", { className: "flex -space-x-2" }, [0, 1, 2, 3].map(function (p) { return h("img", { key: p, src: "https://i.pravatar.cc/100?img=" + (10 + p), loading: "lazy", decoding: "async", className: "w-8 h-8 rounded-full border-2 border-black/30" }); })),
           h("div", { className: "text-[13px]" }, h("span", { className: "font-semibold" }, RATING.trustedText), " ", h("span", { className: "text-white/60" }, RATING.travelersText))
         ),
         h(
@@ -958,7 +960,7 @@ function closeNotice() {
         (DEST.items || []).map(function (d) {
           return h(
             GlassCard, { key: d.id, id: "dest-" + d.id, className: "overflow-hidden flex flex-col relative" },
-            d.image && h("img", { src: d.image, className: "w-full h-[220px] object-cover" }),
+            d.image && h("img", { src: d.image, loading: "lazy", decoding: "async", className: "w-full h-[220px] object-cover" }),
             h(
               "div", { className: "p-6 flex flex-col flex-1" },
               h("h3", { className: "text-lg font-semibold" }, d.name),
