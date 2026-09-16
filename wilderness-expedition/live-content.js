@@ -171,24 +171,31 @@
     return out;
   }
 
+  // ---- ONE combined round trip instead of four sequential ones ----
+  // This used to be four separate synchronous XHR calls back to back
+  // (content, prices, discounts, images) — each one blocking the page
+  // until it finished, one after another, before app.js could even
+  // start rendering. That was the main cause of every full page load
+  // of this site feeling slow. /api/bootstrap returns all four in one
+  // response (computed with parallel KV reads server-side), so this is
+  // now a single blocking round trip instead of four.
+  var bootstrapRes = getJSON("/api/bootstrap?site=" + SITE);
+
   // ---- text content ----
-  var contentRes = getJSON("/api/content?site=" + SITE);
-  if (contentRes && contentRes.content) {
-    window.KC_CONTENT = deepMerge(window.KC_CONTENT || {}, contentRes.content);
+  if (bootstrapRes && bootstrapRes.content) {
+    window.KC_CONTENT = deepMerge(window.KC_CONTENT || {}, bootstrapRes.content);
   }
 
   // ---- prices ----
-  var pricesRes = getJSON("/api/prices?site=" + SITE);
-  if (pricesRes && pricesRes.prices && window.KC_PRICES) {
-    window.KC_PRICES = deepMerge(window.KC_PRICES, pricesRes.prices);
+  if (bootstrapRes && bootstrapRes.prices && window.KC_PRICES) {
+    window.KC_PRICES = deepMerge(window.KC_PRICES, bootstrapRes.prices);
   }
 
-  // ---- discounts (package sale %) — synchronous like the rest above,
+  // ---- discounts (package sale %) — part of the same response above,
   // so the package cards can show "was ₹X, now ₹Y" on first paint
   // instead of a flash of the full price. ----
-  var discountsRes = getJSON("/api/discounts");
-  if (discountsRes && discountsRes.discounts) {
-    window.KC_DISCOUNTS = discountsRes.discounts;
+  if (bootstrapRes && bootstrapRes.discounts) {
+    window.KC_DISCOUNTS = bootstrapRes.discounts;
   }
 
   // ---- images (only keys the admin has actually changed) ----
@@ -198,12 +205,11 @@
   // already baked into KC_CONTENT. Instead: remember each key's OLD
   // filename, then swap every matching string found anywhere in
   // KC_CONTENT for the new photo URL.
-  var imagesRes = getJSON("/api/images?site=" + SITE);
-  if (imagesRes && imagesRes.images) {
+  if (bootstrapRes && bootstrapRes.images) {
     var oldFilenames = {}; // oldFilename -> newUrl
     window.KC_IMAGES = window.KC_IMAGES || {};
-    for (var key in imagesRes.images) {
-      var newUrl = imagesRes.images[key];
+    for (var key in bootstrapRes.images) {
+      var newUrl = bootstrapRes.images[key];
       var oldFilename = window.KC_IMAGES[key];
       if (oldFilename) oldFilenames[oldFilename] = newUrl;
       window.KC_IMAGES[key] = newUrl;
