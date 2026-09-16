@@ -171,16 +171,23 @@
     return out;
   }
 
+  // ---- ONE combined round trip instead of three sequential ones ----
+  // This used to be three separate synchronous XHR calls back to back
+  // (content, prices, images) — each one blocking the page until it
+  // finished, one after another, before app.js could even start
+  // rendering. /api/bootstrap returns all of it in one response
+  // (computed with parallel KV reads server-side), so this is now a
+  // single blocking round trip instead of three.
+  var bootstrapRes = getJSON("/api/bootstrap?site=" + SITE);
+
   // ---- text content ----
-  var contentRes = getJSON("/api/content?site=" + SITE);
-  if (contentRes && contentRes.content) {
-    window.KC_CONTENT = deepMerge(window.KC_CONTENT || {}, contentRes.content);
+  if (bootstrapRes && bootstrapRes.content) {
+    window.KC_CONTENT = deepMerge(window.KC_CONTENT || {}, bootstrapRes.content);
   }
 
   // ---- prices ----
-  var pricesRes = getJSON("/api/prices?site=" + SITE);
-  if (pricesRes && pricesRes.prices && window.KC_PRICES) {
-    window.KC_PRICES = deepMerge(window.KC_PRICES, pricesRes.prices);
+  if (bootstrapRes && bootstrapRes.prices && window.KC_PRICES) {
+    window.KC_PRICES = deepMerge(window.KC_PRICES, bootstrapRes.prices);
   }
 
   // ---- images (only keys the admin has actually changed) ----
@@ -190,12 +197,11 @@
   // already baked into KC_CONTENT. Instead: remember each key's OLD
   // filename, then swap every matching string found anywhere in
   // KC_CONTENT for the new photo URL.
-  var imagesRes = getJSON("/api/images?site=" + SITE);
-  if (imagesRes && imagesRes.images) {
+  if (bootstrapRes && bootstrapRes.images) {
     var oldFilenames = {}; // oldFilename -> newUrl
     window.KC_IMAGES = window.KC_IMAGES || {};
-    for (var key in imagesRes.images) {
-      var newUrl = imagesRes.images[key];
+    for (var key in bootstrapRes.images) {
+      var newUrl = bootstrapRes.images[key];
       var oldFilename = window.KC_IMAGES[key];
       if (oldFilename) oldFilenames[oldFilename] = newUrl;
       window.KC_IMAGES[key] = newUrl;
