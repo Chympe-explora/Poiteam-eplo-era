@@ -149,7 +149,14 @@ window.KCBridge = (function () {
     }).then(r => r.json()).catch(() => ({ ok: false, error: "network error" }));
   }
 
-  // Poll status. onUpdate(status) called whenever it changes.
+  // Poll status. onUpdate(status, meta) called whenever the status
+  // changes — meta is { guideName, guidePhone } once a guide has
+  // confirmed (see handleStatusCheck on the backend), so the visitor's
+  // "Message Your Guide" WhatsApp button can go straight to whichever
+  // guide actually confirmed it, instead of the site's general number.
+  // Previously this only forwarded `status` and silently dropped
+  // guideName/guidePhone even though the backend was already sending
+  // them — meta was always undefined on the receiving end.
   // Returns a stop() function. Only ever called with a bookingId that was
   // itself returned from a consented submitBooking(), so no extra gate here.
   function watchStatus(bookingId, onUpdate) {
@@ -162,10 +169,10 @@ window.KCBridge = (function () {
       polls++;
       try {
         const r = await fetch(`${API_BASE}/api/status/${bookingId}`);
-        const { status } = await r.json();
+        const { status, guideName, guidePhone } = await r.json();
         if (status && status !== last) {
           last = status;
-          onUpdate(status);
+          onUpdate(status, { guideName: guideName || "", guidePhone: guidePhone || "" });
         }
       } catch (e) {}
       if (!stopped && last !== "confirmed" && last !== "cancelled") {

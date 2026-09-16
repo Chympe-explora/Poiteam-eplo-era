@@ -557,6 +557,8 @@
         return h("img", {
           key: src,
           src: src,
+          loading: i === safeIdx ? undefined : "lazy",
+          decoding: "async",
           onError: function () { setFailed(function (f) { var n = {}; for (var k in f) n[k] = f[k]; n[src] = true; return n; }); },
           className: "absolute inset-0 w-full h-full object-cover transition-opacity duration-[1400ms] ease-in-out " + (i === safeIdx ? "opacity-100" : "opacity-0")
         });
@@ -624,7 +626,7 @@
     if (!slot.image || failed) return null;
     return h(
       "div", { className: props.className || "mt-4 rounded-xl overflow-hidden aspect-[16/9] bg-black/20" },
-      h("img", { src: slot.image, alt: slot.alt || "", onError: function () { setFailed(true); }, className: "w-full h-full object-cover" })
+      h("img", { src: slot.image, alt: slot.alt || "", loading: "lazy", decoding: "async", onError: function () { setFailed(true); }, className: "w-full h-full object-cover" })
     );
   }
 
@@ -758,6 +760,41 @@
   // ---------------------------------------------------------------------
   // Root App
   // ---------------------------------------------------------------------
+  // CountdownDisplay — the "Checking with your guide… Ns" text shown
+  // while a fresh booking is pending. Deliberately its own React.memo'd
+  // component: it owns its OWN countdown state and its OWN setInterval,
+  // so the once-a-second re-render this causes is scoped to this one
+  // small <p> instead of cascading up into App's entire ~2000-line
+  // render (see the comment above countdownActive in App for the
+  // history here). onExpire is App's setNoResponse — a useState setter,
+  // which React guarantees has a stable identity across renders, so
+  // this component's memoization never breaks from a fresh function
+  // reference being passed down.
+  var CountdownDisplay = React.memo(function CountdownDisplay(props) {
+    var active = props.active;
+    var seconds = props.seconds;
+    var onExpire = props.onExpire;
+    var countdownState = useState(seconds); var countdown = countdownState[0], setCountdown = countdownState[1];
+    useEffect(function () {
+      if (!active) { setCountdown(seconds); return; }
+      setCountdown(seconds);
+      var remaining = seconds;
+      var tick = setInterval(function () {
+        remaining -= 1;
+        if (remaining <= 0) {
+          clearInterval(tick);
+          setCountdown(0);
+          onExpire(true);
+        } else {
+          setCountdown(remaining);
+        }
+      }, 1000);
+      return function () { clearInterval(tick); };
+    }, [active, seconds]);
+    if (!active) return null;
+    return h("p", { className: "mt-2 text-[12px] text-white/40" }, props.label, countdown, "s");
+  });
+
   function App() {
     // Lets an external link jump straight to a specific page —
     // e.g. root site's destination card can link to
@@ -964,25 +1001,19 @@
     // your guide yet" screen with a prefilled WhatsApp button, instead of
     // leaving the visitor staring at a spinner with no explanation.
     var NO_RESPONSE_SECONDS = 20;
-    var countdownState = useState(NO_RESPONSE_SECONDS); var countdown = countdownState[0], setCountdown = countdownState[1];
+    // The actual per-second ticking now lives inside the memoized
+    // CountdownDisplay component (defined above App) instead of here.
+    // Previously `setCountdown` ran every second for up to 20s straight
+    // after every booking submission, and since it lived on this
+    // top-level App state, EVERY setState call re-rendered this entire
+    // ~2000-line page (gallery, packages, forms, everything) once a
+    // second — right when a visitor's device is already busiest, having
+    // just submitted a booking. countdownActive is a plain boolean, so
+    // React.memo's default prop comparison on CountdownDisplay works
+    // without any extra memoization here.
     var noResponseState = useState(false); var noResponse = noResponseState[0], setNoResponse = noResponseState[1];
-    useEffect(function () {
-      if (bookingStatus !== "pending" || !trackingId) { setCountdown(NO_RESPONSE_SECONDS); setNoResponse(false); return; }
-      setCountdown(NO_RESPONSE_SECONDS);
-      setNoResponse(false);
-      var remaining = NO_RESPONSE_SECONDS;
-      var tick = setInterval(function () {
-        remaining -= 1;
-        if (remaining <= 0) {
-          clearInterval(tick);
-          setCountdown(0);
-          setNoResponse(true);
-        } else {
-          setCountdown(remaining);
-        }
-      }, 1000);
-      return function () { clearInterval(tick); };
-    }, [bookingStatus, trackingId]);
+    var countdownActive = bookingStatus === "pending" && !!trackingId;
+    useEffect(function () { setNoResponse(false); }, [countdownActive]);
 
     // ---- Trap the browser/hardware Back button while locked --------------
     // setPage() above already blocks the app's OWN Back/Next buttons, but
@@ -1797,7 +1828,7 @@
         GlassCard, { className: "px-6 py-4 flex flex-wrap items-center justify-between gap-4" },
         h(
           "div", { className: "flex items-center gap-3" },
-          h("div", { className: "flex -space-x-2" }, [0, 1, 2, 3].map(function (p) { return h("img", { key: p, src: "https://i.pravatar.cc/100?img=" + (10 + p), className: "w-8 h-8 rounded-full border-2 border-black/30" }); })),
+          h("div", { className: "flex -space-x-2" }, [0, 1, 2, 3].map(function (p) { return h("img", { key: p, src: "https://i.pravatar.cc/100?img=" + (10 + p), loading: "lazy", decoding: "async", className: "w-8 h-8 rounded-full border-2 border-black/30" }); })),
           h("div", { className: "text-[13px]" }, h("span", { className: "font-semibold" }, TRUST.trustedText), " ", h("span", { className: "text-white/60" }, TRUST.travelersText))
         ),
         h(
@@ -1982,7 +2013,7 @@
       ),
       SECTIONS.meetGuide && h(
         GlassCard, { className: "p-6 md:p-8 flex flex-col sm:flex-row gap-5 items-center" },
-        h("img", { src: CONTENT.guide.image, className: "w-20 h-20 rounded-full object-cover border border-white/20 flex-shrink-0" }),
+        h("img", { src: CONTENT.guide.image, loading: "lazy", decoding: "async", className: "w-20 h-20 rounded-full object-cover border border-white/20 flex-shrink-0" }),
         h(
           "div", { className: "text-center sm:text-left" },
           h("div", { className: "font-semibold text-lg" }, t("meetYourGuide", "Meet Your Guide")),
@@ -2006,7 +2037,7 @@
               className: p.span + " rounded-[16px] overflow-hidden border border-white/10 relative group cursor-pointer",
               onClick: function () { toggleLightbox(p.src); }
             },
-            h("img", { src: p.src, className: "w-full h-full object-cover group-hover:scale-110 transition duration-700" }),
+            h("img", { src: p.src, loading: "lazy", decoding: "async", className: "w-full h-full object-cover group-hover:scale-110 transition duration-700" }),
             h("div", { className: "absolute inset-0 bg-black/10 group-hover:bg-black/0 transition" }),
             h("div", { className: "absolute bottom-2 left-2 px-2 py-1 rounded-full bg-black/50 backdrop-blur text-[10px] border border-white/10" }, p.cat)
           );
@@ -2083,7 +2114,7 @@
       GlassCard, { className: "overflow-hidden group" },
       h(
         "div", { className: "relative h-[220px] overflow-hidden" },
-        h("img", { src: CONTENT.sectionImages.sharedPackageCard, className: "w-full h-full object-cover group-hover:scale-105 transition duration-700" }),
+        h("img", { src: CONTENT.sectionImages.sharedPackageCard, loading: "lazy", decoding: "async", className: "w-full h-full object-cover group-hover:scale-105 transition duration-700" }),
         h("div", { className: "absolute top-4 left-4 px-3 py-1 rounded-full bg-black/40 backdrop-blur text-xs border border-white/10" }, PKG.sharedTour.badge),
         h("div", { className: "absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/70 to-transparent" })
       ),
@@ -2110,7 +2141,7 @@
       GlassCard, { className: "overflow-hidden group" },
       h(
         "div", { className: "relative h-[220px] overflow-hidden" },
-        h("img", { src: CONTENT.sectionImages.privatePackageCard, className: "w-full h-full object-cover group-hover:scale-105 transition duration-700" }),
+        h("img", { src: CONTENT.sectionImages.privatePackageCard, loading: "lazy", decoding: "async", className: "w-full h-full object-cover group-hover:scale-105 transition duration-700" }),
         h("div", { className: "absolute top-4 left-4 px-3 py-1 rounded-full bg-black/40 backdrop-blur text-xs border border-white/10" }, PKG.privatePackage.badge),
         h("div", { className: "absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/70 to-transparent" })
       ),
@@ -2411,7 +2442,7 @@
                 h(
                   "div", { className: "relative text-center" },
                   window.KC_IMAGES.qrCode
-                    ? h("img", { src: window.KC_IMAGES.qrCode, className: "w-full h-full max-w-[280px] max-h-[280px] mx-auto object-contain rounded-[8px]" })
+                    ? h("img", { src: window.KC_IMAGES.qrCode, loading: "lazy", decoding: "async", className: "w-full h-full max-w-[280px] max-h-[280px] mx-auto object-contain rounded-[8px]" })
                     : h("div", { className: "w-40 h-40 mx-auto bg-black text-white flex items-center justify-center text-[10px] font-mono p-2" }, t("upiQrPlaceholderLabel", "UPI QR"), h("br"), CONTENT.upiId, h("br"), money(grandTotal)),
                   h("div", { className: "mt-3 text-black text-xs font-semibold" }, t("scanToPayLabel", "Scan to Pay ₹"), grandTotal)
                 )
@@ -2560,11 +2591,16 @@
         statusVisual.badgeText
       ),
       // Live 1→20 countdown while pending — ticks down every second and
-      // hands off to noResponseCard above the moment it hits 0.
-      bookingStatus === "pending" && h(
-        "p", { className: "mt-2 text-[12px] text-white/40" },
-        t("checkingWithGuideText", "Checking with your guide… "), countdown, "s"
-      ),
+      // hands off to noResponseCard above the moment it hits 0. Lives in
+      // its own memoized component (see CountdownDisplay near the top of
+      // this file) so the once-a-second tick doesn't re-render this
+      // entire page — see the comment above countdownActive for why.
+      bookingStatus === "pending" && h(CountdownDisplay, {
+        active: countdownActive,
+        seconds: NO_RESPONSE_SECONDS,
+        label: t("checkingWithGuideText", "Checking with your guide… "),
+        onExpire: setNoResponse
+      }),
       h("p", { className: "mt-3 text-white/60 text-sm" }, t("thankYouPrefix", "Thank you "), contact.name, t("thankYouMiddle", "! Your adventure is secured. We have received advance ₹"), advance, t("thankYouBalanceMid", ". Balance ₹"), balanceLeft, t("thankYouSuffix", " to be paid on arrival.")),
       bookingCode && h(
         "div", { className: "mt-4 inline-block px-4 py-2 rounded-full bg-white/10 border border-white/20 text-white/80 text-sm font-mono" },
